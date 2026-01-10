@@ -3,3 +3,18 @@ data/
 __pycache__/
 *.npy
 venv/
+# Virtual environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models (DO NOT PUSH PICKLES)
+models/*.pkl
+
+# OS
+.DS_Store
