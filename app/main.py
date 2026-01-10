@@ -1,5 +1,7 @@
 from fastapi import FastAPI
-from app.recommender import recommend  # Import the function we just wrote
+from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+from app.recommender import recommend
 
 app = FastAPI(
     title="Netflix Recommender API",
@@ -7,13 +9,18 @@ app = FastAPI(
     version="1.0"
 )
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to Netflix Recommender API"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/recommend/{title}")
-def get_recommendations(title: str, top_k: int = 5):
-    """
-    Get top_k recommendations for a given movie/show title
-    """
-    return recommend(title, top_k)
+class RecommendRequest(BaseModel):
+    title: str
+    top_k: int = 5
+
+@app.post("/recommend")
+def get_recommendations(req: RecommendRequest):
+    return recommend(req.title, req.top_k)
+
